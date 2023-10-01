@@ -1,0 +1,12 @@
+[core]
+  editor = nvim
+[merge]
+  tool = nvim -d
+  conflictstyle = diff3
+[difftool]
+  prompt = false
+[github]
+	user = vishal340
+[user]
+	email = vishal340@github.com
+	name = vishal
