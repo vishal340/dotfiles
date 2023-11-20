@@ -8,6 +8,12 @@ case $- in
   *) return ;;
 esac
 
+if [ "$(tmux ls | wc -l)" -eq 0 ]; then
+  exec tmux new-session -A -s main
+elif [ "$(tmux ls | grep "^main.*(attached)" | wc -l)" -eq 0 ] && [ "$($TMUX | wc -c)" -eq 0 ]; then
+  exec tmux new-session -A -s main
+fi
+
 alias sudo='sudo '
 alias e='echo $?'
 
@@ -15,6 +21,7 @@ bind -f ~/.inputrc
 alias v='nvim'
 export NVIM_APPNAME='nvim'
 alias r=ranger
+alias fd=fdfind
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -143,10 +150,11 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 export CPLUS_INCLUDE_PATH=~/vcpkg/installed/x64-linux/include/
-export PYHTONHOME=$PYHTONHOME:/usr/include/python3.10/
+export CPLUS_INCLUDE_PATH=~/downloads/glfw/include:$CPLUS_INCLUDE_PATH
+export PYTHONHOME="/usr/include/python3.10/:$PYTHONHOME"
 export PATH=/usr/local/go/bin:/usr/local/cuda-11.7/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH
-export JAVA_HOME="/usr/lib/jvm/java-18-openjdk-amd64"
+export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64/"
 export EDITOR=nvim
 # export BROWSER='wslview'
 export BROWSER=firefox
@@ -172,8 +180,6 @@ alias c='clear'
 
 source ~/.git-prompt.sh
 
-source ~/../downloads/emsdk/emsdk_env.sh
-
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u:\[\033[01;34m\]\W\[\033[01;30m\]$(__git_ps1 " (%s)")\[\033[01;36m\]\$ '
 
 export NNN_PLUG='f:finder;o:fzopen;c:fcd;j:jump;p:preview-tui;d:diffs;t:preview-tabbed;i:imgview;v:vidthumb'
@@ -186,9 +192,4 @@ export WASMTIME_HOME="$HOME/.wasmtime"
 
 export PATH="$WASMTIME_HOME/bin:$PATH"
 
-# [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-if [ "$(tmux ls | wc -l)" -eq 0 ]; then
-  exec tmux new-session -A -s main
-elif [ "$(tmux ls | grep "^main.*(attached)" | wc -l)" -eq 0 ] && [ "$($TMUX | wc -c)" -eq 0 ]; then
-  exec tmux new-session -A -s main
-fi
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
