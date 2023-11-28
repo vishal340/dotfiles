@@ -7,11 +7,10 @@ case $- in
   *i*) ;;
   *) return ;;
 esac
-
 if [ "$(tmux ls | wc -l)" -eq 0 ]; then
-  exec tmux new-session -A -s main
+ exec tmux new-session -A -s main
 elif [ "$(tmux ls | grep "^main.*(attached)" | wc -l)" -eq 0 ] && [ "$($TMUX | wc -c)" -eq 0 ]; then
-  exec tmux new-session -A -s main
+ exec tmux new-session -A -s main
 fi
 
 alias sudo='sudo '
@@ -149,15 +148,14 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-export CPLUS_INCLUDE_PATH=~/vcpkg/installed/x64-linux/include/
+export CPLUS_INCLUDE_PATH=~/vcpkg/installed/x64-linux/include/:$CPLUS_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=~/downloads/glfw/include:$CPLUS_INCLUDE_PATH
-export PYTHONHOME="/usr/include/python3.10/:$PYTHONHOME"
+# export PYTHONHOME=$PYTHONHOME:#HOME/anaconda3/lib/pytho
 export PATH=/usr/local/go/bin:/usr/local/cuda-11.7/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH
-export JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64/"
-export EDITOR=nvim
-# export BROWSER='wslview'
-export BROWSER=firefox
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/:$JAVA_HOME
+export EDITOR="nvim"
+export BROWSER='firefox'
 
 GOPATH=$HOME/go
 # function _update_ps1() {
