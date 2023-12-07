@@ -7,12 +7,18 @@ case $- in
   *i*) ;;
   *) return ;;
 esac
+
+TMUX_CONFIG="~/.tmux.conf"
+
 if [ "$(tmux ls | wc -l)" -eq 0 ]; then
  exec tmux new-session -A -s main
 elif [ "$(tmux ls | grep "^main.*(attached)" | wc -l)" -eq 0 ] && [ "$($TMUX | wc -c)" -eq 0 ]; then
  exec tmux new-session -A -s main
 fi
 
+alias tmux="tmux -f $TMUX_CONFIG"
+alias tn="tmux -u -f $TMUX_CONFIG new"
+alias ta="tmux -u -f $TMUX_CONFIG attach"
 alias sudo='sudo '
 alias e='echo $?'
 
@@ -153,9 +159,9 @@ export CPLUS_INCLUDE_PATH=~/downloads/glfw/include:$CPLUS_INCLUDE_PATH
 # export PYTHONHOME=$PYTHONHOME:#HOME/anaconda3/lib/pytho
 export PATH=/usr/local/go/bin:/usr/local/cuda-11.7/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/:$JAVA_HOME
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
 export EDITOR="nvim"
-export BROWSER='firefox'
+# export BROWSER='firefox'
 
 GOPATH=$HOME/go
 # function _update_ps1() {
@@ -164,11 +170,6 @@ GOPATH=$HOME/go
 # if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
 #     PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 # fi
-
-TMUX_CONFIG="~/.tmux.conf"
-alias tmux="tmux -f $TMUX_CONFIG"
-alias tn="tmux -u -f $TMUX_CONFIG new"
-alias ta="tmux -u -f $TMUX_CONFIG attach"
 
 alias c='clear'
 . "$HOME/.cargo/env"

@@ -10,3 +10,5 @@
 [user]
 	email = vishal340@github.com
 	name = vishal
+[init]
+	defaultBranch = main
