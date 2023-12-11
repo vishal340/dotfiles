@@ -156,10 +156,11 @@ unset __conda_setup
 
 export CPLUS_INCLUDE_PATH=~/vcpkg/installed/x64-linux/include/:$CPLUS_INCLUDE_PATH
 export CPLUS_INCLUDE_PATH=~/downloads/glfw/include:$CPLUS_INCLUDE_PATH
-# export PYTHONHOME=$PYTHONHOME:#HOME/anaconda3/lib/pytho
+# export PYTHONHOME=$PYTHONHOME:$HOME/anaconda3/lib/python3
 export PATH=/usr/local/go/bin:/usr/local/cuda-11.7/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
+export GRADLE_HOME="$HOME/.sdkman/candidates/gradle/current/bin/gradle"
 export EDITOR="nvim"
 # export BROWSER='firefox'
 
@@ -179,7 +180,7 @@ alias c='clear'
 
 source ~/.git-prompt.sh
 
-PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u:\[\033[01;34m\]\W\[\033[01;30m\]$(__git_ps1 " (%s)")\[\033[01;36m\]\$ '
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u:\[\033[01;34m\]\W\[\033[01;35m\]$(__git_ps1 " (%s)")\[\033[01;36m\]\$ '
 
 export NNN_PLUG='f:finder;o:fzopen;c:fcd;j:jump;p:preview-tui;d:diffs;t:preview-tabbed;i:imgview;v:vidthumb'
 alias nnn='nnn -e'
