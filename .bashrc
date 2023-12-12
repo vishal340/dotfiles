@@ -136,8 +136,7 @@ if ! shopt -oq posix; then
 fi
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+source /usr/share/nvm/init-nvm.sh
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -159,7 +158,7 @@ export CPLUS_INCLUDE_PATH=~/downloads/glfw/include:$CPLUS_INCLUDE_PATH
 # export PYTHONHOME=$PYTHONHOME:$HOME/anaconda3/lib/python3
 export PATH=/usr/local/go/bin:/usr/local/cuda-11.7/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
+#export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
 export GRADLE_HOME="$HOME/.sdkman/candidates/gradle/current/bin/gradle"
 export EDITOR="nvim"
 # export BROWSER='firefox'
