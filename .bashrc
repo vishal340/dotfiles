@@ -26,7 +26,6 @@ bind -f ~/.inputrc
 alias v='nvim'
 export NVIM_APPNAME='nvim'
 alias r=ranger
-alias fd=fdfind
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
