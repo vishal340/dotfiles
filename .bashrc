@@ -137,32 +137,8 @@ fi
 export NVM_DIR="$HOME/.nvm"
 source /usr/share/nvm/init-nvm.sh
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/vishal340/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-  eval "$__conda_setup"
-else
-  if [ -f "/home/vishal340/anaconda3/etc/profile.d/conda.sh" ]; then
-    . "/home/vishal340/anaconda3/etc/profile.d/conda.sh"
-  else
-    export PATH="/home/vishal340/anaconda3/bin:$PATH"
-  fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
-export CPLUS_INCLUDE_PATH=~/vcpkg/installed/x64-linux/include/:$CPLUS_INCLUDE_PATH
-export CPLUS_INCLUDE_PATH=~/downloads/glfw/include:$CPLUS_INCLUDE_PATH
-# export PYTHONHOME=$PYTHONHOME:$HOME/anaconda3/lib/python3
-export PATH=/usr/local/go/bin:/usr/local/cuda-11.7/bin:$PATH
-export LD_LIBRARY_PATH=/usr/local/cuda-11.7/lib64:$LD_LIBRARY_PATH
-#export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
-export GRADLE_HOME="$HOME/.sdkman/candidates/gradle/current/bin/gradle"
 export EDITOR="nvim"
-# export BROWSER='firefox'
 
-GOPATH=$HOME/go
 # function _update_ps1() {
 #     PS1="$($GOPATH/bin/powerline-go -error $?)"
 # }
@@ -179,15 +155,3 @@ alias c='clear'
 source ~/.git-prompt.sh
 
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u:\[\033[01;34m\]\W\[\033[01;35m\]$(__git_ps1 " (%s)")\[\033[01;36m\]\$ '
-
-export NNN_PLUG='f:finder;o:fzopen;c:fcd;j:jump;p:preview-tui;d:diffs;t:preview-tabbed;i:imgview;v:vidthumb'
-alias nnn='nnn -e'
-export NNN_FIFO="/tmp/nnn.fifo"
-export NNN_SSHFS='sshfs -o reconnect,idmap=user,cache_timeout=3600'
-export NNN_RCLONE='rclone mount --read-only --no-checksum'
-
-export WASMTIME_HOME="$HOME/.wasmtime"
-
-export PATH="$WASMTIME_HOME/bin:$PATH"
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
