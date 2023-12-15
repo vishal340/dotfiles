@@ -1,3 +1,5 @@
+# exec --no-startup-id setxkbmap -option caps:escape
+exec --no-startup-id setxkbmap -option caps:escape && xcape -e 'Control_L=Escape' -t 150
 # exec --no-startup-id ~/set_once.sh
 # This file is a modified version based on default i3-config-wizard config
 # source is available here:
@@ -204,8 +206,8 @@ bindsym F10 exec --no-startup-id ~/.config/i3/scripts/keyhint-2
 # Backlight setting using dunst osc
 bindsym XF86MonBrightnessUp exec --no-startup-id ~/.config/i3/scripts/volume_brightness.sh brightness_up
 bindsym XF86MonBrightnessDown exec --no-startup-id ~/.config/i3/scripts/volume_brightness.sh brightness_down
-bindsym XF86KbdBrightnessUp exec --no-startup-id brightnessctl --Device='asus::kbd_backlight' 1+
-bindsym XF86KbdBrightnessDown exec --no-startup-id brightnessctl --Device='asus::kbd_backlight' 1-
+bindsym XF86KbdBrightnessUp exec --no-startup-id brightnessctl -d 'asus::kbd_backlight' s 1+
+bindsym XF86KbdBrightnessDown exec --no-startup-id brightnessctl -d 'asus::kbd_backlight' s 1-
 
 # change focus
 bindsym $mod+h focus left
@@ -232,10 +234,10 @@ bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
-bindsym $mod+Shift+h split h
+bindsym $mod+Shift+v split horizontal
 
 # split in vertical orientation
-bindsym $mod+v split v
+bindsym $mod+Shift+h split vertical
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
@@ -323,13 +325,14 @@ set $ws10 "10"
 #workspace $ws5 output HDMI-0
 
 # bind program to workspace and focus to them on startup:
-assign [class="Alacritty"] $ws1
+# assign [class="Alacritty"] $ws1
 assign [class="(?i)microsoft-edge-dev"] $ws2
 assign [class="Spotify"] $ws10
-assign [class="Discord"] $ws9
+assign [class="discord"] $ws9
+assign [class="steam"] $ws8
 
 # automatic set focus new window if it opens on another workspace than the current:
-for_window [class=Alacritty] focus
+# for_window [class=Alacritty] focus
 for_window [class=(?i)microsoft-edge-dev] focus
 
 ##############
@@ -359,7 +362,7 @@ for_window [class=(?i)microsoft-edge-dev] focus
 # exec_always --no-startup-id picom -b
 #
 # for custom config:
-# exec_always --no-startup-id picom --config  ~/.config/picom/picom.conf
+# bindsym exec_always --no-startup-id picom --config  ~/.config/picom.conf
 
 #############################################
 # autostart applications/services on login: #
@@ -599,3 +602,9 @@ for_window [title="Battery Warning"] sticky enable
 #alt-tab fo switching between windows in workspace
 bindsym Mod1+Tab exec ~/.config/i3/scripts/alt_tab.py next current
 bindsym Mod1+Shift+Tab exec ~/.config/i3/scripts/alt_tab.py prev current
+
+# clipboard tool
+exec --no-startup-id greenclip daemon>/dev/null
+bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard
+
+exec --no-startup-id i3-battery-popup -sn -L 25% -l 20% -t 2m

@@ -26,6 +26,7 @@ bind -f ~/.inputrc
 alias v='nvim'
 export NVIM_APPNAME='nvim'
 alias r=ranger
+alias update="eos-update --nvidia --yay --aur"
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -106,9 +107,9 @@ fi
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+alias ll='eza -alF'
+alias la='eza -A'
+alias l='eza -CF'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -149,7 +150,7 @@ export EDITOR="nvim"
 alias c='clear'
 . "$HOME/.cargo/env"
 
-# Generated for envman. Do not edit.
+# Generated for envman. Do not edit. (I don't I should delete this line. better not)
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
 source ~/.git-prompt.sh
