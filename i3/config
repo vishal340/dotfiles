@@ -329,7 +329,7 @@ assign [class="Alacritty"] $ws2
 assign [class="(?i)microsoft-edge-dev"] $ws1
 assign [class="Spotify"] $ws10
 assign [class="discord"] $ws9
-assign [class="steam"] $ws8
+assign [class="(?i)steam"] $ws8
 # assign [class="document\ viewer"] $ws8
 
 # automatic set focus new window if it opens on another workspace than the current:
@@ -596,10 +596,6 @@ bindsym $mod+t exec --no-startup-id rofi -show window \
 # bar toggle, hide or show
 bindsym $mod+m bar mode toggle
 
-# notify on low battery
-exec --no-startup-id i3-battery-popup -L 20% -t 2m
-for_window [title="Battery Warning"] sticky enable
-
 #alt-tab fo switching between windows in workspace
 bindsym Mod1+Tab exec ~/.config/i3/scripts/alt_tab.py next current
 bindsym Mod1+Shift+Tab exec ~/.config/i3/scripts/alt_tab.py prev current
@@ -608,4 +604,5 @@ bindsym Mod1+Shift+Tab exec ~/.config/i3/scripts/alt_tab.py prev current
 exec --no-startup-id greenclip daemon>/dev/null
 bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard
 
-exec_always --no-startup-id i3-battery-popup -sn -L 30% -l 20% -t 2m
+for_window [title="Battery Warning"] sticky enable
+exec_always --no-startup-id i3-battery-popup -sn -L 30% -l 25% -t 90s
