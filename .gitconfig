@@ -1,5 +1,6 @@
 [core]
   editor = nvim
+	symlinks = true
 [merge]
   tool = nvim -d
   conflictstyle = diff3

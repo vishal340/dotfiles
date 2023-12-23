@@ -25,8 +25,6 @@
 # text rendering and scalability on retina/hidpi displays (thanks to pango).
 font pango: Noto Sans Regular 10
 
-exec_always --no-startup-id setxkbmap -option 'caps:swapescape'
-
 # set the mod key to the winkey:
 set $mod Mod4
 
@@ -603,6 +601,3 @@ bindsym Mod1+Shift+Tab exec ~/.config/i3/scripts/alt_tab.py prev current
 # clipboard tool
 exec --no-startup-id greenclip daemon>/dev/null
 bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show clipboard
-
-for_window [title="Battery Warning"] sticky enable
-exec_always --no-startup-id i3-battery-popup -sn -L 30% -l 25% -t 90s

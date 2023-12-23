@@ -1,0 +1,304 @@
+diff -up a/config.def.h b/config.def.h
+--- a/config.def.h	2023-08-17 17:35:28.333393605 +0400
++++ b/config.def.h	2023-08-17 17:24:46.724435876 +0400
+@@ -3,6 +3,7 @@
+ /* alt-tab configuration */
+ static const unsigned int tabModKey 		= 0x40;	/* if this key is hold the alt-tab functionality stays acitve. This key must be the same as key that is used to active functin altTabStart `*/
+ static const unsigned int tabCycleKey 		= 0x17;	/* if this key is hit the alt-tab program moves one position forward in clients stack. This key must be the same as key that is used to active functin altTabStart */
++static const unsigned int tabCycleKey2 		= 0x31;	/* grave key */
+ static const unsigned int tabPosY 			= 1;	/* tab position on Y axis, 0 = bottom, 1 = center, 2 = top */
+ static const unsigned int tabPosX 			= 1;	/* tab position on X axis, 0 = left, 1 = center, 2 = right */
+ static const unsigned int maxWTab 			= 600;	/* tab menu width */
+@@ -93,7 +94,8 @@ static const Key keys[] = {
+ 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
+ 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
+ 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
+-	{ Mod1Mask,             		XK_Tab,    altTabStart,	   {0} },
++	{ Mod1Mask,             		XK_Tab,    altTabStart,	   {.i = 1} },
++	{ Mod1Mask,             		XK_grave,  altTabStart,	   {.i = 0} },
+ 	TAGKEYS(                        XK_1,                      0)
+ 	TAGKEYS(                        XK_2,                      1)
+ 	TAGKEYS(                        XK_3,                      2)
+diff -up a/dwm.c b/dwm.c
+--- a/dwm.c	2023-08-17 17:24:19.753640383 +0400
++++ b/dwm.c	2023-08-18 09:41:00.834187121 +0400
+@@ -87,6 +87,7 @@ typedef struct Monitor Monitor;
+ typedef struct Client Client;
+ struct Client {
+ 	char name[256];
++	char class[256];
+ 	float mina, maxa;
+ 	int x, y, w, h;
+ 	int oldx, oldy, oldw, oldh;
+@@ -121,7 +122,9 @@ struct Monitor {
+ 	int mx, my, mw, mh;   /* screen size */
+ 	int wx, wy, ww, wh;   /* window area  */
+ 	int altTabN;		  /* move that many clients forward */
++	int altTabNc;		  /* move that many clients forward when using tab for same class */
+ 	int nTabs;			  /* number of active clients in tag */
++	int ncTabs;			  /* number of active clients under same class in tag */
+ 	int isAlt; 			  /* 1,0 */
+ 	int maxWTab;
+ 	int maxHTab;
+@@ -134,6 +137,7 @@ struct Monitor {
+ 	Client *sel;
+ 	Client *stack;
+ 	Client ** altsnext; /* array of all clients in the tag */
++	Client ** altsnextclass;	/* array of all clients under same class in the tag */
+ 	Monitor *next;
+ 	Window barwin;
+ 	Window tabwin;
+@@ -245,6 +249,7 @@ static void zoom(const Arg *arg);
+ void drawTab(int nwins, int first, Monitor *m);
+ void altTabStart(const Arg *arg);
+ static void altTabEnd();
++static void getclassname(Client *c);
+ 
+ /* variables */
+ static const char broken[] = "broken";
+@@ -657,6 +662,7 @@ createmon(void)
+ 	m->lt[0] = &layouts[0];
+ 	m->lt[1] = &layouts[1 % LENGTH(layouts)];
+ 	m->nTabs = 0;
++	m->ncTabs = 0;
+ 	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
+ 	return m;
+ }
+@@ -1059,6 +1065,7 @@ manage(Window w, XWindowAttributes *wa)
+ 	c->oldbw = wa->border_width;
+ 
+ 	updatetitle(c);
++	getclassname(c);
+ 	if (XGetTransientForHint(dpy, w, &trans) && (t = wintoclient(trans))) {
+ 		c->mon = t->mon;
+ 		c->tags = t->tags;
+@@ -1683,7 +1690,7 @@ altTab()
+ 			selmon->altTabN = 0; /* reset altTabN */
+ 
+ 		focus(selmon->altsnext[selmon->altTabN]);
+-		restack(selmon);
++		/* restack(selmon); */
+ 	}
+ 
+ 	/* redraw tab */
+@@ -1692,8 +1699,64 @@ altTab()
+ }
+ 
+ void
++altTabClass()
++{
++	/* move to next window */
++	if (selmon->sel != NULL) {
++		selmon->altTabNc++;
++		if (selmon->altTabNc >= selmon->ncTabs)
++			selmon->altTabNc = 0; /* reset altTabNc */
++
++		focus(selmon->altsnextclass[selmon->altTabNc]);
++	}
++
++	/* redraw tab */
++	XRaiseWindow(dpy, selmon->tabwin);
++	drawTab(selmon->ncTabs, 0, selmon);
++}
++
++void
++altTabShift()
++{
++	/* move to prev window */
++	if (selmon->sel != NULL) {
++		selmon->altTabN--;
++		if (selmon->altTabN < 0)
++			selmon->altTabN = selmon->nTabs - 1; /* reset altTabN */
++
++		if (selmon->altsnext[selmon->altTabN]) {
++			focus(selmon->altsnext[selmon->altTabN]);
++		}
++ 	}
++ 
++	/* redraw tab */
++	XRaiseWindow(dpy, selmon->tabwin);
++	drawTab(selmon->nTabs, 0, selmon);
++}
++ 
++void
++altTabShiftClass()
++{
++	/* move to prev window */
++	if (selmon->sel != NULL) {
++		selmon->altTabNc--;
++		if (selmon->altTabNc < 0)
++			selmon->altTabNc = selmon->ncTabs - 1; /* reset altTabNc */
++
++		if (selmon->altsnextclass[selmon->altTabNc]) {
++			focus(selmon->altsnextclass[selmon->altTabNc]);
++		}
++	}
++
++	/* redraw tab */
++	XRaiseWindow(dpy, selmon->tabwin);
++	drawTab(selmon->ncTabs, 0, selmon);
++}
++
++void
+ altTabEnd()
+ {
++	Client *buff = NULL;
+ 	if (selmon->isAlt == 0)
+ 		return;
+ 
+@@ -1703,8 +1766,15 @@ altTabEnd()
+ 	* so they remain in right order for the next time that alt-tab is used
+ 	*/
+ 	if (selmon->nTabs > 1) {
+-		if (selmon->altTabN != 0) { /* if user picked original client do nothing */
+-			Client *buff = selmon->altsnext[selmon->altTabN];
++		if (selmon->altTabN != 0)
++			buff = selmon->altsnext[selmon->altTabN];
++		else if (selmon->altTabNc != 0) {
++			buff = selmon->altsnextclass[selmon->altTabNc];
++			for (; selmon->altTabN < selmon->nTabs; selmon->altTabN++)
++				if (selmon->altsnext[selmon->altTabN] == selmon->altsnextclass[selmon->altTabNc])
++					break;
++		}
++		if (buff) { /* if user picked original client do nothing */
+ 			if (selmon->altTabN > 1)
+ 				for (int i = selmon->altTabN;i > 0;i--)
+ 					selmon->altsnext[i] = selmon->altsnext[i - 1];
+@@ -1720,6 +1790,7 @@ altTabEnd()
+ 		}
+ 
+ 		free(selmon->altsnext); /* free list of clients */
++		free(selmon->altsnextclass); /* free list of clients */
+ 	}
+ 
+ 	/* turn off/destroy the window */
+@@ -1779,16 +1850,17 @@ drawTab(int nwins, int first, Monitor *m
+ 
+ 	}
+ 
+-	h = selmon->maxHTab  / m->nTabs;
++	h = selmon->maxHTab / nwins;
+ 
+ 	int y = 0;
+-	int n = 0;
+-	for (int i = 0;i < m->nTabs;i++) { /* draw all clients into tabwin */
+-		c = m->altsnext[i];
++	for (int i = 0; i < nwins; i++) { /* draw all clients into tabwin */
++		if (nwins == m->nTabs)
++			c = m->altsnext[i];
++		else
++			c = m->altsnextclass[i];
+ 		if(!ISVISIBLE(c)) continue;
+ 		/* if (HIDDEN(c)) continue; uncomment if you're using awesomebar patch */
+ 
+-		n++;
+ 		drw_setscheme(drw, scheme[(c == m->sel) ? SchemeSel : SchemeNorm]);
+ 		drw_text(drw, 0, y, selmon->maxWTab, h, 0, c->name, 0);
+ 		y += h;
+@@ -1801,7 +1873,6 @@ drawTab(int nwins, int first, Monitor *m
+ void
+ altTabStart(const Arg *arg)
+ {
+-	selmon->altsnext = NULL;
+ 	if (selmon->tabwin)
+ 		altTabEnd();
+ 
+@@ -1810,30 +1881,47 @@ altTabStart(const Arg *arg)
+ 	} else {
+ 		selmon->isAlt = 1;
+ 		selmon->altTabN = 0;
++		selmon->altTabNc = 0;
+ 
+ 		Client *c;
+ 		Monitor *m = selmon;
+ 
++		char tempclass[256] = {'\0'};
++		if (selmon->sel)
++			strncpy(tempclass, selmon->sel->class, 256);
++
+ 		m->nTabs = 0;
++		m->ncTabs = 0;
+ 		for(c = m->clients; c; c = c->next) { /* count clients */
+ 			if(!ISVISIBLE(c)) continue;
+ 			/* if (HIDDEN(c)) continue; uncomment if you're using awesomebar patch */
+ 
+ 			++m->nTabs;
++
++			if (!strcmp(c->class, tempclass))
++				++m->ncTabs;
+ 		}
+ 
+ 		if (m->nTabs > 0) {
+ 			m->altsnext = (Client **) malloc(m->nTabs * sizeof(Client *));
++			m->altsnextclass = (Client **) malloc(m->ncTabs * sizeof(Client *));
+ 
+ 			int listIndex = 0;
++			int listIndexc = 0;
+ 			for(c = m->stack; c; c = c->snext) { /* add clients to the list */
+ 				if(!ISVISIBLE(c)) continue;
+ 				/* if (HIDDEN(c)) continue; uncomment if you're using awesomebar patch */
+ 
+ 				m->altsnext[listIndex++] = c;
++
++				if (!strcmp(c->class, tempclass))
++					m->altsnextclass[listIndexc++] = c;
+ 			}
+ 
+-			drawTab(m->nTabs, 1, m);
++			if (arg->i)
++				drawTab(m->nTabs, 1, m);
++			else
++				drawTab(m->ncTabs, 1, m);
+ 
+ 			struct timespec ts = { .tv_sec = 0, .tv_nsec = 1000000 };
+ 
+@@ -1848,7 +1936,10 @@ altTabStart(const Arg *arg)
+ 			}
+ 
+ 			XEvent event;
+-			altTab();
++			if (arg->i)
++				altTab();
++			else
++				altTabClass();
+ 			if (grabbed == 0) {
+ 				altTabEnd();
+ 			} else {
+@@ -1858,8 +1949,19 @@ altTabStart(const Arg *arg)
+ 						if (event.type == KeyRelease && event.xkey.keycode == tabModKey) { /* if super key is released break cycle */
+ 							break;
+ 						} else if (event.type == KeyPress) {
+-							if (event.xkey.keycode == tabCycleKey) {/* if XK_s is pressed move to the next window */
+-								altTab();
++							if (event.xkey.keycode == tabCycleKey || event.xkey.keycode == tabCycleKey2 ) { /* if XK_s is pressed move to the next window */
++								if (arg->i) {
++									if (CLEANMASK((Mod1Mask|ShiftMask)) == CLEANMASK(event.xkey.state))
++										altTabShift();
++									else
++										altTab();
++								} else {
++									if (CLEANMASK((Mod1Mask|ShiftMask)) == CLEANMASK(event.xkey.state))
++										altTabShiftClass();
++									else
++										altTabClass();
++								}
++								
+ 							}
+ 						}
+ 					}
+@@ -2231,6 +2333,15 @@ updatetitle(Client *c)
+ 		strcpy(c->name, broken);
+ }
+ 
++void
++getclassname(Client *c)
++{
++	gettextprop(c->win, XA_WM_CLASS, c->class, sizeof c->class);
++
++	if (c->class[0] == '\0') /* hack to mark broken clients */
++		strcpy(c->name, broken);
++}
++
+ void
+ updatewindowtype(Client *c)
+ {

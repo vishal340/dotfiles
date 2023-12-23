@@ -9,14 +9,13 @@ case $- in
 esac
 
 TMUX_CONFIG="$HOME/.tmux.conf"
-
-if [ "$(tmux ls | wc -l)" -eq 0 ]; then
- exec tmux new-session -A -s main
-elif [ "$(tmux ls | grep -c "^main.*(attached)")" -eq 0 ] && [ "$($TMUX | wc -c)" -eq 0 ]; then
- exec tmux new-session -A -s main
+if [ "$TMUX" == "" ] ; then
+	if [ "$(tmux ls | wc -l)" -eq 0 ]; then
+ 		exec tmux new-session -A -s main
+	elif [ "$(tmux ls | grep -c "^main.*(attached)")" -eq 0 ] ; then
+		exec tmux new-session -A -s main
+	fi
 fi
-
-set -o vi
 
 alias tmux="tmux -f $TMUX_CONFIG"
 alias tn="tmux -u -f $TMUX_CONFIG new"
@@ -141,13 +140,6 @@ export NVM_DIR="$HOME/.nvm"
 source /usr/share/nvm/init-nvm.sh
 
 export EDITOR="nvim"
-
-# function _update_ps1() {
-#     PS1="$($GOPATH/bin/powerline-go -error $?)"
-# }
-# if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
-#     PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-# fi
 
 alias c='clear'
 . "$HOME/.cargo/env"
