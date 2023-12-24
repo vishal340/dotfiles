@@ -1,6 +1,5 @@
-/* See LICENSE file for copyright and license details. */
-
-/* alt-tab configuration */
+/* See LICENSE file for copyright and license details. */ /* alt-tab
+                                                             configuration */
 static const unsigned int tabModKey =
     0x40; /* if this key is hold the alt-tab functionality stays acitve. This
              key must be the same as key that is used to active functin
@@ -39,10 +38,27 @@ static const char col_gray2[] = "#444444";
 static const char col_gray3[] = "#bbbbbb";
 static const char col_gray4[] = "#eeeeee";
 static const char col_cyan[] = "#005577";
-static const char *colors[][3] = {
-    /*               fg         bg         border   */
-    [SchemeNorm] = {col_gray3, col_gray1, col_gray2},
-    [SchemeSel] = {col_gray4, col_cyan, col_cyan},
+static const char normmarkcolor[] =
+    "#775500"; /*border color for marked client*/
+static const char selmarkcolor[] =
+    "#775577"; /*border color for marked client on focus*/
+
+static const char *colors[][4] = {
+    /*               fg         bg         border     mark   */
+    [SchemeNorm] = {col_gray3, col_gray1, col_gray2, normmarkcolor},
+    [SchemeSel] = {col_gray4, col_cyan, col_cyan, selmarkcolor},
+};
+
+typedef struct {
+  const char *name;
+  const void *cmd;
+} Sp;
+const char *spcmd1[] = {"bitwarden-desktop", NULL};
+const char *spcmd2[] = {"qalculate-qt", NULL};
+static Sp scratchpads[] = {
+    /* name          cmd  */
+    {"Bitwarden", spcmd1},
+    {"calnulator", spcmd2},
 };
 
 /* tagging */
@@ -53,9 +69,9 @@ static const Rule rules[] = {
      *	WM_CLASS(STRING) = instance, class
      *	WM_NAME(STRING) = title
      */
-    /* class      instance    title       tags mask     isfloating   monitor */
-    {"Gimp", NULL, NULL, 0, 1, -1},
-    {"microsoft-edge-dev", NULL, NULL, 1 << 8, 0, -1},
+    /* class      instance    title       tags mask     isfloating   monitor
+       float x,y,w,h         floatborderpx*/
+    {"microsoft-edge-dev", NULL, NULL, 2, 0, -1, 40, 30, 150, 100, 1},
 };
 
 /* layout(s) */
@@ -102,6 +118,12 @@ static const char *kbdbrightnessup[] = {
     "brightnessctl", "--device=asus::kbd_backlight", "s", "1+", NULL};
 static const char *kbdbrightnessdown[] = {
     "brightnessctl", "--device=asus::kbd_backlight", "s", "1-", NULL};
+static const char *up_vol[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",
+                               "+10%", NULL};
+static const char *down_vol[] = {"pactl", "set-sink-volume", "@DEFAULT_SINK@",
+                                 "-10%", NULL};
+static const char *mute_vol[] = {"pactl", "set-sink-mute", "@DEFAULT_SINK@",
+                                 "toggle", NULL};
 static const char *termcmd[] = {"alacritty", NULL};
 
 static const Key keys[] = {
@@ -110,10 +132,16 @@ static const Key keys[] = {
     {0, 0x1008FF03, spawn, {.v = brightnessdown}},
     {0, 0x1008FF05, spawn, {.v = kbdbrightnessup}},
     {0, 0x1008FF06, spawn, {.v = kbdbrightnessdown}},
+    {0, 0x1008FF12, spawn, {.v = mute_vol}},
+    {0, 0x1008FF11, spawn, {.v = down_vol}},
+    {0, 0x1008FF13, spawn, {.v = up_vol}},
+    {0, XK_Print, spawn, SHCMD("scripts/screenshot.sh")},
+    {ShiftMask, XK_Print, spawn, SHCMD("scripts/screenshotsel.sh")},
     {MODKEY, XK_p, spawn, {.v = roficmd}},
     {MODKEY, XK_c, spawn, {.v = greenclip}},
     {MODKEY | ShiftMask, XK_Return, spawn, {.v = termcmd}},
     {MODKEY, XK_b, togglebar, {0}},
+    {MODKEY, XK_s, togglesticky, {0}},
     {MODKEY, XK_j, focusstack, {.i = +1}},
     {MODKEY, XK_k, focusstack, {.i = -1}},
     {MODKEY, XK_i, incnmaster, {.i = +1}},
@@ -135,10 +163,16 @@ static const Key keys[] = {
     {MODKEY | ShiftMask, XK_comma, tagmon, {.i = -1}},
     {MODKEY | ShiftMask, XK_period, tagmon, {.i = +1}},
     {Mod1Mask, XK_Tab, altTabStart, {.i = 1}},
-    {Mod1Mask, XK_grave, altTabStart, {.i = 0}},
+    {Mod1Mask | ShiftMask, XK_Tab, altTabStart, {.i = 0}},
+    {MODKEY, XK_y, togglescratch, {.ui = 0}},
+    {MODKEY, XK_u, togglescratch, {.ui = 1}},
+    {MODKEY, XK_x, togglescratch, {.ui = 2}},
     TAGKEYS(XK_1, 0) TAGKEYS(XK_2, 1) TAGKEYS(XK_3, 2) TAGKEYS(XK_4, 3)
         TAGKEYS(XK_5, 4) TAGKEYS(XK_6, 5) TAGKEYS(XK_7, 6) TAGKEYS(XK_8, 7)
             TAGKEYS(XK_9, 8){MODKEY | ShiftMask, XK_q, quit, {0}},
+    {MODKEY, XK_semicolon, togglemark, {0}},
+    {MODKEY, XK_o, swapfocus, {0}},
+    {MODKEY, XK_u, swapclient, {0}},
 };
 
 /* button definitions */
@@ -151,7 +185,7 @@ static const Button buttons[] = {
     {ClkStatusText, 0, Button2, spawn, {.v = termcmd}},
     {ClkClientWin, MODKEY, Button1, movemouse, {0}},
     {ClkClientWin, MODKEY, Button2, togglefloating, {0}},
-    {ClkClientWin, MODKEY, Button3, resizemouse, {0}},
+    {ClkClientWin, MODKEY, Button1, resizemouse, {0}},
     {ClkTagBar, 0, Button1, view, {0}},
     {ClkTagBar, 0, Button3, toggleview, {0}},
     {ClkTagBar, MODKEY, Button1, tag, {0}},

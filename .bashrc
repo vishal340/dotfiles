@@ -17,6 +17,8 @@ if [ "$TMUX" == "" ] ; then
 	fi
 fi
 
+set -o vi
+
 alias tmux="tmux -f $TMUX_CONFIG"
 alias tn="tmux -u -f $TMUX_CONFIG new"
 alias ta="tmux -u -f $TMUX_CONFIG attach"
