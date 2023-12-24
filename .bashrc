@@ -25,7 +25,7 @@ alias ta="tmux -u -f $TMUX_CONFIG attach"
 alias sudo='sudo '
 alias e='echo $?'
 
-bind -f ~/.inputrc
+bind -f $HOME/.inputrc
 alias v='nvim'
 export NVIM_APPNAME='nvim'
 alias r=ranger
