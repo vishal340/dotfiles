@@ -22,8 +22,8 @@ set -o vi
 alias tmux="tmux -f $TMUX_CONFIG"
 alias tn="tmux -u -f $TMUX_CONFIG new"
 alias ta="tmux -u -f $TMUX_CONFIG attach"
-alias sudo='sudo '
 alias e='echo $?'
+alias x='xdg-open '
 
 bind -f $HOME/.inputrc
 alias v='nvim'
@@ -141,7 +141,8 @@ if ! shopt -oq posix; then
 fi
 
 export NVM_DIR="$HOME/.nvm"
-source /usr/share/nvm/init-nvm.sh
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 export EDITOR="nvim"
 
@@ -154,3 +155,9 @@ alias c='clear'
 source ~/.git-prompt.sh
 
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u:\[\033[01;34m\]\W\[\033[01;35m\]$(__git_ps1 " (%s)")\[\033[01;36m\]\$ '
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+
+export PATH=$PATH:/usr/local/go/bin/
