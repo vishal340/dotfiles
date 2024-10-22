@@ -140,9 +140,7 @@ if ! shopt -oq posix; then
 	fi
 fi
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
+source /usr/share/nvm/init-nvm.sh
 
 export EDITOR="nvim"
 
@@ -155,9 +153,5 @@ alias c='clear'
 source ~/.git-prompt.sh
 
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u:\[\033[01;34m\]\W\[\033[01;35m\]$(__git_ps1 " (%s)")\[\033[01;36m\]\$ '
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 
 export PATH=$PATH:/usr/local/go/bin/
