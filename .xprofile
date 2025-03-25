@@ -1,3 +1,2 @@
 #!/bin/sh
 setxkbmap -option 'caps:swapescape'
-sh ~/Downloads/dwm/battery.sh &
