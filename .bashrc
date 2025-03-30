@@ -153,5 +153,18 @@ alias c='clear'
 source ~/.git-prompt.sh
 
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u:\[\033[01;34m\]\W\[\033[01;35m\]$(__git_ps1 " (%s)")\[\033[01;36m\]\$ '
+if [ -n "$VIRTUAL_ENV" ]; then
+	VIRTUAL_ENV_NAME=$(basename "$VIRTUAL_ENV")
+	PS1="($VIRTUAL_ENV_NAME) $PS1"
+else
+	PS1="$PS1"
+fi
 
 export PATH=$PATH:/usr/local/go/bin/
+
+# Created by `pipx` on 2025-03-25 11:30:40
+export PATH="$PATH:/home/vishal/.local/bin"
+
+# this is to use pip to install packages globally
+# to use the below command, need pipx and follow the other procedures instructed upon install
+eval "$(register-python-argcomplete pipx)"
