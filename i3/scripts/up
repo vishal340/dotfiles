@@ -1,0 +1,11 @@
+#!/bin/bash
+
+M="$(i3-msg -t get_tree | jq -r 'recurse(.nodes[];.nodes!=null)|select(.nodes[].focused==true).nodes[].fullscreen_mode')"
+for ((i = 0; i < ${#M}; i += 2)); do
+	char=${M:i:1}
+	if [[ $char -ne 0 ]]; then
+		i3-msg 'fullscreen disable; focus up; fullscreen enable'
+		exit
+	fi
+done
+i3-msg 'focus up'
