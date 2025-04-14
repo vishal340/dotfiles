@@ -172,7 +172,7 @@ bindsym $mod+r mode "resize"
 ######################################
 
 # start a terminal
-bindsym $mod+Return exec --no-startup-id alacritty
+bindsym $mod+Return exec --no-startup-id kitty
 
 # kill focused window
 bindsym $mod+q kill
@@ -332,14 +332,14 @@ set $ws10 "10"
 #workspace $ws5 output HDMI-0
 
 # bind program to workspace and focus to them on startup:
-assign [class="(?i)Alacritty"] $ws2
+assign [class="(?i)Kitty"] $ws2
 assign [class="(?i)Spotify"] $ws10
 assign [class="(?i)discord"] $ws9
 assign [class="(?i)steam"] $ws8
 # assign [class="document\ viewer"] $ws8
 
 # automatic set focus new window if it opens on another workspace than the current:
-# for_window [class=Alacritty] focus
+for_window [class=Kitty] focus
 
 ##############
 # compositor #
