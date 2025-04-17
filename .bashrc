@@ -8,14 +8,14 @@ case $- in
 *) return ;;
 esac
 
-TMUX_CONFIG="$HOME/.tmux.conf"
-if [ "$TMUX" == "" ]; then
-	if [ "$(tmux ls | wc -l)" -eq 0 ]; then
-		exec tmux new-session -A -s main
-	elif [ "$(tmux ls | grep -c "^main.*(attached)")" -eq 0 ]; then
-		exec tmux new-session -A -s main
-	fi
-fi
+# TMUX_CONFIG="$HOME/.tmux.conf"
+# if [ "$TMUX" == "" ]; then
+# 	if [ "$(tmux ls | wc -l)" -eq 0 ]; then
+# 		exec tmux new-session -A -s main
+# 	elif [ "$(tmux ls | grep -c "^main.*(attached)")" -eq 0 ]; then
+# 		exec tmux new-session -A -s main
+# 	fi
+# fi
 
 set -o vi
 

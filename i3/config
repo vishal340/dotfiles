@@ -332,7 +332,7 @@ set $ws10 "10"
 #workspace $ws5 output HDMI-0
 
 # bind program to workspace and focus to them on startup:
-assign [class="(?i)Kitty"] $ws2
+# assign [class="(?i)Kitty"] $ws2
 assign [class="(?i)Spotify"] $ws10
 assign [class="(?i)discord"] $ws9
 assign [class="(?i)steam"] $ws8
@@ -603,5 +603,5 @@ bindsym $mod+c exec --no-startup-id rofi -modi "clipboard:greenclip print" -show
 bindsym $mod+m bar mode toggle
 
 #alt-tab fo switching between windows in workspace
-bindsym Mod1+Tab exec ~/.config/i3/scripts/alt_tab.py next current
-bindsym Mod1+Shift+Tab exec ~/.config/i3/scripts/alt_tab.py prev current
+bindsym Mod1+Tab exec ~/.config/i3/scripts/alt_tab.py n c
+bindsym Mod1+Shift+Tab exec ~/.config/i3/scripts/alt_tab.py p c
