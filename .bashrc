@@ -28,6 +28,7 @@ alias x='xdg-open '
 bind -f $HOME/.inputrc
 alias v='nvim'
 export NVIM_APPNAME='nvim'
+export MANPAGER='nvim +Man!'
 alias r=ranger
 alias update="eos-update --nvidia --yay --aur"
 alias usb_mount="sudo mount /dev/sda1 /home/usb_drive"
