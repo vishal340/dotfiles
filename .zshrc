@@ -14,8 +14,8 @@ TMUX_CONFIG="$HOME/.tmux.conf"
 # 	fi
 # fi
 
-bindkey '^[[A' history-search-backward
-bindkey '^[[B' history-search-forward
+bindkey '\e[A' history-beginning-search-backward
+bindkey '\e[B' history-beginning-search-forward
 
 set -o vi
 
@@ -122,3 +122,6 @@ else
 fi
 
 export PATH=$PATH:/usr/local/go/bin:$HOME/.local/bin
+
+alias databricks1='databricks --profile INFOGROUP'
+alias databricks2='databricks --profile WORKSPACE'
