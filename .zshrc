@@ -113,7 +113,7 @@ alias c='clear'
 
 source ~/.git-prompt.sh
 setopt PROMPT_SUBST
-PS1='%n@%m %f %c$(__git_ps1 " (%s)")\$ '
+PS1='%F{green}%%n@%m %f %c$(__git_ps1 " (%s)")\$ '
 if [ -n "$VIRTUAL_ENV" ]; then
 	VIRTUAL_ENV_NAME=$(basename "$VIRTUAL_ENV")
 	PS1="($VIRTUAL_ENV_NAME) $PS1"
