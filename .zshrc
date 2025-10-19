@@ -4,6 +4,7 @@ plugins=(git)
 
 source $ZSH/oh-my-zsh.sh
 
+# _setxkbmap -option 'caps:swapescape'
 
 # If not running interactively, don't do anything
 case $- in
