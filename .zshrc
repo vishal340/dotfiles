@@ -1,3 +1,9 @@
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+
 
 # If not running interactively, don't do anything
 case $- in
@@ -111,15 +117,7 @@ alias c='clear'
 # Generated for envman. Do not edit. (I don't I should delete this line. better not)
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-source ~/.git-prompt.sh
 setopt PROMPT_SUBST
-PS1='%F{green}%%n@%m %f %c$(__git_ps1 " (%s)")\$ '
-if [ -n "$VIRTUAL_ENV" ]; then
-	VIRTUAL_ENV_NAME=$(basename "$VIRTUAL_ENV")
-	PS1="($VIRTUAL_ENV_NAME) $PS1"
-else
-	PS1="$PS1"
-fi
 
 export PATH=$PATH:/usr/local/go/bin:$HOME/.local/bin
 
