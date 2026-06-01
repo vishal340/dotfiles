@@ -5,15 +5,6 @@ plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
 # _setxkbmap -option 'caps:swapescape'
-
-# If not running interactively, don't do anything
-case $- in
-*i*) ;;
-*) return ;;
-esac
-
-TMUX_CONFIG="$HOME/.tmux.conf"
-# if [ "$TMUX" == "" ]; then
 # 	if [ "$(tmux ls | wc -l)" -eq 0 ]; then
 # 		exec tmux new-session -A -s main
 # 	elif [ "$(tmux ls | grep -c "^main.*(attached)")" -eq 0 ]; then
@@ -26,12 +17,11 @@ bindkey '\e[B' history-beginning-search-forward
 
 set -o vi
 
-alias tmux="tmux -f $TMUX_CONFIG"
-alias tn="tmux -u -f $TMUX_CONFIG new"
-alias ta="tmux -u -f $TMUX_CONFIG attach"
-alias e='echo $?'
-alias x='xdg-open '
+alias glog="git log --stat --oneline --graph --decorate --all"
 
+alias e='echo $?'
+
+alias python=python3
 alias v='nvim'
 export NVIM_APPNAME='nvim'
 export MANPAGER='nvim +Man!'
@@ -42,60 +32,6 @@ alias usb_unmount="sudo umount /home/usb_drive"
 
 # don't put duplicate lines or lines starting with space in the history.
 HISTCONTROL=ignoreboth:erasedups
-
-HISTSIZE=1000
-HISTFILESIZE=2000
-
-
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
-
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-	debian_chroot=$(cat /etc/debian_chroot)
-fi
-
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-xterm-color | *-256color) color_prompt=yes ;;
-esac
-
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
-
-if [ -n "$force_color_prompt" ]; then
-	if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-		# We have color support; assume it's compliant with Ecma-48
-		# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-		# a case would tend to support setf rather than setaf.)
-		color_prompt=yes
-	else
-		color_prompt=
-	fi
-fi
-
-unset color_prompt force_color_prompt
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-	test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-	alias ls='ls --color=auto'
-	#alias dir='dir --color=auto'
-	#alias vdir='vdir --color=auto'
-
-	alias grep='grep --color=auto'
-	alias fgrep='fgrep --color=auto'
-	alias egrep='egrep --color=auto'
-fi
-
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # some more ls aliases
 alias ll='eza -alF'
@@ -115,12 +51,16 @@ export EDITOR="nvim"
 alias c='clear'
 . "$HOME/.cargo/env"
 
-# Generated for envman. Do not edit. (I don't I should delete this line. better not)
-[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+export PATH=$PATH:/usr/local/go/bin:$HOME/.local/bin:/opt/homebrew/opt/python@3.12/bin
 
-setopt PROMPT_SUBST
-
-export PATH=$PATH:/usr/local/go/bin:$HOME/.local/bin
+export SPARK_HOME="$HOME/Downloads/Spark"
 
 alias databricks1='databricks --profile INFOGROUP'
 alias databricks2='databricks --profile WORKSPACE'
+
+
+export VCPKG_ROOT="$HOME/Downloads/vcpkg/"
+
+export AVANTE_GEMINI_API_KEY=~/.avante_gemini	
+
+plugins=(... direnv)

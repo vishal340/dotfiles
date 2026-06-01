@@ -1,0 +1,3 @@
+[submodule "kitty/gattino"]
+	path = kitty/gattino
+	url = https://github.com/salvozappa/gattino
