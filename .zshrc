@@ -61,6 +61,6 @@ alias databricks2='databricks --profile WORKSPACE'
 
 export VCPKG_ROOT="$HOME/Downloads/vcpkg/"
 
-export AVANTE_GEMINI_API_KEY=~/.avante_gemini	
+source ~/.avante_gemini
 
 plugins=(... direnv)
