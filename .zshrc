@@ -1,6 +1,10 @@
 export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="robbyrussell"
-plugins=(git)
+plugins=(
+  git
+  zsh-completions
+  fzf-tab
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -64,3 +68,14 @@ export VCPKG_ROOT="$HOME/Downloads/vcpkg/"
 source ~/.avante_gemini
 
 plugins=(... direnv)
+
+# Enable verbose flag descriptions in completions
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '[%d]'
+zstyle ':completion:*' group-name ''
+
+# Bind Tab key to trigger fzf-tab
+zstyle ':fzf-tab:*' continuous-trigger 'tab'
+
+# Display a preview window on the side/bottom for additional context if available
+zstyle ':fzf-tab:complete:*' fzf-flags --preview-window=right:50%:wrap
