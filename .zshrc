@@ -16,6 +16,26 @@ source $ZSH/oh-my-zsh.sh
 # 	fi
 # fi
 
+
+
+ranger_cd() {
+    # Create a temporary file to store the last directory
+    tempfile="$(mktemp)"
+    
+    # Run ranger and tell it to write the last directory to tempfile
+    ranger --choosedir="$tempfile" "$@"
+    
+    # If tempfile exists and is not empty, cd into it
+    if [ -f "$tempfile" ] && [ -s "$tempfile" ]; then
+        target_dir="$(cat "$tempfile")"
+        if [ -d "$target_dir" ]; then
+            cd "$target_dir" || echo "Failed to cd into $target_dir"
+        fi
+    fi
+    
+    rm -f "$tempfile"
+}
+
 bindkey '\e[A' history-beginning-search-backward
 bindkey '\e[B' history-beginning-search-forward
 
@@ -29,7 +49,8 @@ alias python=python3
 alias v='nvim'
 export NVIM_APPNAME='nvim'
 export MANPAGER='nvim +Man!'
-alias r=ranger
+alias r=ranger_cd
+alias r1=ranger
 alias update="eos-update --nvidia --yay --aur"
 alias usb_mount="sudo mount /dev/sda1 /home/usb_drive"
 alias usb_unmount="sudo umount /home/usb_drive"
@@ -51,10 +72,12 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 export EDITOR="nvim"
+export VISUAL="nvim"
 
 alias c='clear'
 . "$HOME/.cargo/env"
 
+export PATH="/opt/homebrew/bin:$PATH"
 export PATH=$PATH:/usr/local/go/bin:$HOME/.local/bin:/opt/homebrew/opt/python@3.12/bin
 
 export SPARK_HOME="$HOME/Downloads/Spark"
@@ -63,7 +86,8 @@ alias databricks1='databricks --profile INFOGROUP'
 alias databricks2='databricks --profile WORKSPACE'
 
 
-export VCPKG_ROOT="$HOME/Downloads/vcpkg/"
+export VCPKG_ROOT="$HOME/Downloads/vcpkg"
+export PATH="$HOME/Downloads/vcpkg:$PATH"
 
 source ~/.avante_gemini
 
@@ -79,3 +103,4 @@ zstyle ':fzf-tab:*' continuous-trigger 'tab'
 
 # Display a preview window on the side/bottom for additional context if available
 zstyle ':fzf-tab:complete:*' fzf-flags --preview-window=right:50%:wrap
+
