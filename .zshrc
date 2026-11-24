@@ -8,6 +8,8 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
+ulimit -s unlimited
+
 # _setxkbmap -option 'caps:swapescape'
 # 	if [ "$(tmux ls | wc -l)" -eq 0 ]; then
 # 		exec tmux new-session -A -s main
